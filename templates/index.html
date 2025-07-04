@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisador de Emails com IA</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 40px auto; background-color: #f4f4f9; color: #333; }
+        .container { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #0056b3; }
+        textarea { width: 95%; padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; }
+        input[type="file"] { margin-top: 10px; }
+        input[type="submit"] { background-color: #0056b3; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-top: 20px; }
+        input[type="submit"]:hover { background-color: #004494; }
+        .results { margin-top: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #eef7ff; }
+        .error { color: #d9534f; font-weight: bold; }
+        .label-produtivo { color: #28a745; font-weight: bold; }
+        .label-improdutivo { color: #ffc107; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analisador de Emails com IA</h1>
+        <p>Cole o texto do email abaixo ou faça o upload de um arquivo (.txt ou .pdf) para classificá-lo e obter uma sugestão de resposta.</p>
+
+        <!-- Formulário de Upload e Texto -->
+        <form action="/analisar" method="post" enctype="multipart/form-data">
+            <label for="email_content"><strong>Opção 1: Cole o texto do email</strong></label><br>
+            <textarea name="email_content" id="email_content" rows="10"></textarea>
+            
+            <p><strong>Opção 2: Ou faça o upload de um arquivo</strong></p>
+            <input type="file" name="email_file" accept=".txt,.pdf">
+            <br>
+            <input type="submit" value="Analisar Email">
+        </form>
+
+        <!-- Seção de Resultados -->
+        {% if results %}
+        <div class="results">
+            <h2>Resultados da Análise</h2>
+            <p>
+                <strong>Categoria:</strong> 
+                {% if results.categoria == 'Produtivo' %}
+                    <span class="label-produtivo">{{ results.categoria }}</span>
+                {% else %}
+                    <span class="label-improdutivo">{{ results.categoria }}</span>
+                {% endif %}
+            </p>
+            <p><strong>Sugestão de Resposta:</strong></p>
+            <p><i>"{{ results.sugestao_resposta }}"</i></p>
+            <hr>
+            <p><small><strong>Texto Processado (NLTK):</strong> {{ results.texto_processado_nltk }}</small></p>
+        </div>
+        {% endif %}
+
+        <!-- Seção de Erro -->
+        {% if error %}
+            <p class="error">Erro: {{ error }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
